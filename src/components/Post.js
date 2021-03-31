@@ -1,6 +1,8 @@
 import React from "react";
 import { Grid, Image, Text, Button } from "../elements";
 import {history } from "../redux/configureStore"
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const Post = (props) => {
   return (
@@ -13,7 +15,7 @@ const Post = (props) => {
           </Grid>
           <Grid is_flex width="auto">
             <Text>{props.insert_dt}</Text>
-            {props.is_me && (<Button width="auto" padding="4px" margin="4px" _onClick={() => {history.push(`/write/${props.id}`)}}>수정</Button>)}
+            {props.is_me && (<Button width="auto" padding="4px" margin="4px" _onClick={() => {history.push(`/write/${props.id}`)}}>수정/삭제</Button>)}
           </Grid>
         </Grid>
         <Grid padding="16px">
@@ -22,10 +24,17 @@ const Post = (props) => {
         <Grid>
           <Image shape="rectangle" src={props.image_url} />
         </Grid>
-        <Grid padding="16px">
+        <Grid padding="16px" is_flex>
+          <Grid>
           <Text margin="0px" bold>
             댓글 {props.comment_cnt}개
           </Text>
+          </Grid>          
+          <Grid is_flex>
+          <FavoriteBorderIcon color ="disabled"/>
+          <FavoriteIcon color ="secondary"/>
+          <Text marging="0px" bold>좋아요10개</Text>
+          </Grid> 
         </Grid>
       </Grid>
     </React.Fragment>

@@ -3,6 +3,7 @@ import {Grid, Input, Button} from "../elements"
 
 import {actionCreators as commentActions} from "../redux/modules/comment"
 import {useDispatch, useSelector} from "react-redux"
+import Permit from "../shared/Permit"
 
 const CommentWrite = (props) => {
 
@@ -24,7 +25,9 @@ const CommentWrite = (props) => {
 
     return(
         <React.Fragment>
-        <Grid padding="16px" is_flex >
+            <Permit>
+
+            <Grid padding="16px" is_flex >
             <Input 
             placeholder="댓글내용을 입력해 주세요 :)" 
             _onChange={onChange} 
@@ -37,6 +40,8 @@ const CommentWrite = (props) => {
             >작성</Button>
 
         </Grid>
+            </Permit>
+        
         </React.Fragment>
     )
 }

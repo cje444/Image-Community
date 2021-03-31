@@ -31,7 +31,7 @@ const Image = (props) => {
 Image.defaultProps = {
   shape: "circle",
   src:
-    "https://www.vmcdn.ca/f/files/piquenewsmagazine/import/2015-33_news_mtnnews2-1-cd1c0a5e13e77f75.jpg;w=640",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3fb_gFelkywOUFGgQPMMcoARr6-FtRnGUag&usqp=CAU",
   size: 36,
 };
 
@@ -61,7 +61,6 @@ const ImageCircle = styled.div`
   width: var(--size);
   height: var(--size);
   border-radius: var(--size);
-
   background-image: url("${(props) => props.src}");
   background-size: cover;
   margin: 4px;

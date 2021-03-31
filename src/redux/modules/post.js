@@ -10,6 +10,7 @@ const SET_POST = "SET_POST";
 const ADD_POST = "ADD_POST";
 const EDIT_POST = "EDIT_POST";
 const LODING = "LOADING";
+const DELETE_POST = "DELETE_POST"
 
 const setPost = createAction(SET_POST, (post_list, paging) => ({
   post_list,
@@ -17,6 +18,10 @@ const setPost = createAction(SET_POST, (post_list, paging) => ({
 }));
 const addPost = createAction(ADD_POST, (post) => ({ post }));
 const editPost = createAction(EDIT_POST, (post_id, post) => ({
+  post_id,
+  post,
+}));
+const deletePost = createAction(DELETE_POST, (post_id, post) => ({
   post_id,
   post,
 }));
@@ -39,6 +44,33 @@ const initialPost = {
   comment_cnt: 0,
   insert_dt: moment().format("YYYY-MM-DD hh:mm:ss"),
 };
+
+
+
+const deletePostFB =(post_id =null, post = {}) => {
+  return function(dispatch, getState, {history}){
+
+    if(!post_id){
+      console.log("게시물 정보가 없어요!")
+      return;
+    }
+    const _post_idx = getState().post.list.findIndex((p) => p.id === post_id);
+    const _post = getState().post.list[_post_idx];
+
+    const postDB = firestore.collection("post");
+
+    postDB.doc(post_id).delete(post).then(() =>{
+      dispatch(deletePost(post_id));
+      history.replace("/");
+      console.log("포스트가 성공적으로 삭제되었습니다.")
+    }).catch((err)=>{
+      console.error("포스트를 삭제하지 못했습니다.", err)
+    })
+
+    console.log(_post);
+  }
+
+}
 
 const editPostFB = (post_id = null, post = {}) => {
   return function (dispatch, getState, { history }) {
@@ -292,6 +324,14 @@ export default handleActions(
 
         draft.list[idx] = { ...draft.list[idx], ...action.payload.post };
       }),
+      [DELETE_POST]: (state, action) =>
+      produce(state, (draft) => {
+        let idx = draft.list.findIndex((p) => p.id === action.payload.post_id);
+
+        draft.list.splice(idx)
+      }),
+
+
     [LODING]: (state, action) =>
       produce(state, (draft) => {
         draft.is_loading = action.payload.is_loading;
@@ -304,10 +344,12 @@ const actionCreators = {
   setPost,
   addPost,
   editPost,
+  deletePost,
   getPostFB,
   addPostFB,
   editPostFB,
   getOnePostFB,
+  deletePostFB,
 };
 
 export { actionCreators };
