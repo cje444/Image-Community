@@ -1,6 +1,6 @@
 import { createAction, handleActions } from "redux-actions";
 import { produce } from "immer";
-import { firestore } from "../../shared/firebase";
+import { firestore, realtime } from "../../shared/firebase";
 import "moment";
 import moment from "moment";
 import firebase from "firebase/app"
@@ -52,7 +52,24 @@ const addCommentFB = (post_id, contents) => {
         dispatch(addComment(post_id, comment));
 
         if(post){
-          dispatch(postActions.editPost(post_id, {commen_cnt: parseInt(post.comment_cnt)+1}));  //parseInt 숫자형으로 형 변환
+          dispatch(postActions.editPost(post_id, {commen_cnt: parseInt(post.comment_cnt)+1,
+          })
+          );  //parseInt 숫자형으로 형 변환
+
+          const _noti_item = realtime.ref(`noti/${post.user_info.user_id}/list`).push();
+          _noti_item.set({
+            post_id: post.id,
+            user_name: comment.user_name,
+            imge_url: post.image_url,
+            insert_dt: comment.insert_dt,
+          }, (err) =>{
+            if(err){
+              console.log("알림 저장에 실패 했어요!")
+            }else{
+              const notiDB = realtime.ref(`noti/${post.user_info.user_id}`);
+              notiDB.update({read:false});
+            }
+        });
         }
 
         
